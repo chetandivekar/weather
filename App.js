@@ -7,6 +7,9 @@ import {
   StatusBar,
   ImageBackground,
   Image,
+  TextInput,
+  Button,
+  TouchableOpacity,
 } from "react-native";
 import {
   useFonts,
@@ -18,19 +21,23 @@ import {
 
 const HorizontalScrollViewExample = () => {
   const [data, setData] = useState(null);
+  const [textInputValue, setTextInputValue] = useState("");
+  const [displayText, setDisplayText] = useState("");
+  const [location, setLocation] = useState("Mumbai");
   useEffect(() => {
     fetch(
-      "http://api.weatherapi.com/v1/current.json?key=4fbacb367b2b4a8ca9f74202231708&q=india&aqi=no"
+      `http://api.weatherapi.com/v1/current.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&aqi=no`
     )
       .then((response) => response.json())
       .then((data) => {
         setData(data);
+        console.log(data);
       })
       .catch((error) => {
         console.error("API error:", error);
         setData(null); // Set data to null on error
       });
-  }, []);
+  }, [location]);
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_300Light,
@@ -41,6 +48,14 @@ const HorizontalScrollViewExample = () => {
   if (!fontsLoaded) {
     return null; // You might want to show a loading indicator here
   }
+  const handleInputChange = (text) => {
+    setTextInputValue(text);
+  };
+
+  const handleButtonPress = () => {
+    setDisplayText(textInputValue);
+    setLocation(textInputValue);
+  };
 
   return (
     <ImageBackground
@@ -49,6 +64,47 @@ const HorizontalScrollViewExample = () => {
       blurRadius={50}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
+        <View
+          style={{
+            width: "100%",
+            height: 30,
+            
+            alignItems: "center",
+
+            marginTop: 20,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <TextInput
+              style={{
+                borderWidth: 2,
+
+                borderColor: "rgba(255, 255, 255, 0.3)",
+                borderRadius: 10,
+                width: 200,
+                color: "#FFF",
+                fontFamily: "Roboto_400Regular",
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+              }}
+              placeholder="Enter Location"
+              onChangeText={handleInputChange}
+              value={textInputValue}
+            />
+            <TouchableOpacity
+              style={styles.customButton}
+              onPress={handleButtonPress}
+            >
+              <Text style={styles.buttonText}>Search</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Text style={{ marginTop: 20 }}>{displayText}</Text>
         {data ? (
           <View style={styles.main}>
             <View style={styles.flex}>
@@ -84,7 +140,57 @@ const HorizontalScrollViewExample = () => {
                 {data && data.current && data.current.condition.text}
               </Text>
             </View>
-            <View></View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingHorizontal: 20,
+                paddingVertical: 20,
+              }}
+            >
+              <View style={styles.boxs}>
+                <View>
+                  <Image
+                    source={require("./assets/wind.png")}
+                    style={{ width: 25, height: 25 }}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.color}>
+                    {data && data.current && data.current.wind_kph} Kph
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.boxs}>
+                <View>
+                  <Image
+                    source={require("./assets/drop.png")}
+                    style={{ width: 25, height: 25 }}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.color}>
+                    {data && data.current && data.current.humidity}%
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.boxs}>
+                <View>
+                  <Image
+                    source={require("./assets/date.png")}
+                    style={{ width: 23, height: 23 }}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.color}>
+                    {data &&
+                      data.current &&
+                      data.location.localtime.split(" ")[1]}
+                  </Text>
+                </View>
+              </View>
+            </View>
             <View style={{ width: "100%" }}>
               <Text style={styles.forecast}>Daily Forecasts</Text>
             </View>
@@ -123,6 +229,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 8,
+  },
+  boxs: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   light: {
     fontFamily: "Roboto_500Medium",
@@ -172,7 +283,7 @@ const styles = StyleSheet.create({
   },
   color: {
     color: "#FFF",
-    fontFamily: "Roboto_400Regular",
+    fontFamily: "Roboto_500Medium",
   },
 });
 
