@@ -24,6 +24,41 @@ const HorizontalScrollViewExample = () => {
   const [textInputValue, setTextInputValue] = useState("");
   const [displayText, setDisplayText] = useState("");
   const [location, setLocation] = useState("Mumbai");
+  const [futureData, setFutureData] = useState(null);
+  useEffect(() => {
+    fetch(
+      `http://api.weatherapi.com/v1/forecast.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&days=7&aqi=no&alerts=no`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setFutureData(data.forecast.forecastday);
+      })
+      .catch((error) => {
+        console.error("API error:", error);
+        setFutureData(null); // Set data to null on error
+      });
+  }, [location]);
+
+  const getDayOfWeek = (dateString) => {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const date = new Date(dateString);
+    const dayIndex = date.getDay();
+    return daysOfWeek[dayIndex];
+  };
+
+  const weatherData = JSON.stringify(futureData);
+  // for (i in futureData) {
+  //   console.log(futureData[i].date);
+  // }
+
   useEffect(() => {
     fetch(
       `http://api.weatherapi.com/v1/current.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&aqi=no`
@@ -31,13 +66,13 @@ const HorizontalScrollViewExample = () => {
       .then((response) => response.json())
       .then((data) => {
         setData(data);
-        console.log(data);
       })
       .catch((error) => {
         console.error("API error:", error);
         setData(null); // Set data to null on error
       });
   }, [location]);
+
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_300Light,
@@ -68,7 +103,7 @@ const HorizontalScrollViewExample = () => {
           style={{
             width: "100%",
             height: 30,
-            
+
             alignItems: "center",
 
             marginTop: 20,
@@ -78,33 +113,38 @@ const HorizontalScrollViewExample = () => {
             style={{
               flexDirection: "row",
               alignItems: "center",
+              marginTop: 20,
             }}
           >
             <TextInput
               style={{
                 borderWidth: 2,
-
+                paddingLeft: 15,
+                padding: 10,
                 borderColor: "rgba(255, 255, 255, 0.3)",
                 borderRadius: 10,
-                width: 200,
+                width: 250,
                 color: "#FFF",
                 fontFamily: "Roboto_400Regular",
                 backgroundColor: "rgba(255, 255, 255, 0.3)",
               }}
+              placeholderTextColor="#FFF"
               placeholder="Enter Location"
               onChangeText={handleInputChange}
+              onSubmitEditing={handleButtonPress}
               value={textInputValue}
             />
             <TouchableOpacity
               style={styles.customButton}
               onPress={handleButtonPress}
             >
-              <Text style={styles.buttonText}>Search</Text>
+              <Image
+                source={require("./assets/search.png")}
+                style={{ height: 22, width: 22 }}
+              />
             </TouchableOpacity>
           </View>
         </View>
-
-        <Text style={{ marginTop: 20 }}>{displayText}</Text>
         {data ? (
           <View style={styles.main}>
             <View style={styles.flex}>
@@ -178,7 +218,7 @@ const HorizontalScrollViewExample = () => {
               <View style={styles.boxs}>
                 <View>
                   <Image
-                    source={require("./assets/date.png")}
+                    source={require("./assets/clock.png")}
                     style={{ width: 23, height: 23 }}
                   />
                 </View>
@@ -191,12 +231,32 @@ const HorizontalScrollViewExample = () => {
                 </View>
               </View>
             </View>
-            <View style={{ width: "100%" }}>
-              <Text style={styles.forecast}>Daily Forecasts</Text>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 30,
+              }}
+            >
+              <View>
+                <Image
+                  source={require("./assets/date.png")}
+                  style={{
+                    width: 23,
+                    height: 23,
+                    marginLeft: 20,
+                  }}
+                />
+              </View>
+
+              <View>
+                <Text style={styles.forecast}>Daily Forecasts</Text>
+              </View>
             </View>
             <View style={{ marginTop: 30, marginLeft: 10 }}>
               <ScrollView horizontal>
-                <View style={styles.box}>
+                {/* <View style={styles.box}>
                   <Text style={styles.color}>Item 1</Text>
                 </View>
                 <View style={styles.box}>
@@ -204,6 +264,24 @@ const HorizontalScrollViewExample = () => {
                 </View>
                 <View style={styles.box}>
                   <Text style={styles.color}>Item 3</Text>
+                </View> */}
+                <View style={styles.container}>
+                  {futureData &&
+                    futureData.map((day) => (
+                      <View key={day.date} style={styles.box}>
+                        <Image
+                          style={{ width: 70, height: 70 }}
+                          source={{
+                            uri:
+                              data &&
+                              data.current &&
+                              "https:" + day.day.condition.icon,
+                          }}
+                        />
+                        <Text style={styles.day}>{getDayOfWeek(day.date)}</Text>
+                        <Text style={styles.temp_c}>{day.day.avgtemp_c}°</Text>
+                      </View>
+                    ))}
                 </View>
               </ScrollView>
             </View>
@@ -223,7 +301,7 @@ const HorizontalScrollViewExample = () => {
 const styles = StyleSheet.create({
   box: {
     width: 120,
-    height: 120,
+    height: 130,
     borderRadius: 17,
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     justifyContent: "center",
@@ -277,13 +355,32 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_500Medium",
     width: "100%",
     fontSize: 20,
-    marginTop: 20,
     marginLeft: 15,
     textAlign: "left",
   },
   color: {
     color: "#FFF",
     fontFamily: "Roboto_500Medium",
+  },
+  day: {
+    color: "#FFF",
+    fontFamily: "Roboto_500Medium",
+  },
+  temp_c: {
+    color: "#FFF",
+    marginVertical: 5,
+    fontSize: 21,
+    fontFamily: "Roboto_500Medium",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  customButton: {
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    borderRadius: 50,
+    padding: 6,
+    marginLeft: 10,
   },
 });
 
