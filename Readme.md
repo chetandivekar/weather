@@ -2,6 +2,10 @@
 
 Welcome to the Weather App! This app provides you with the latest weather conditions and weekly forecasts for your location.
 
+## ScreenShot
+
+<img src="./assets/ss.jpeg" alt="Weather App Screenshot" width="250">
+
 ## Features
 
 - Get current weather details like temperature, wind speed, and water temperature.
@@ -19,10 +23,6 @@ Welcome to the Weather App! This app provides you with the latest weather condit
 
 - Built using React Native.
 - Utilizes weather data from a reliable source.
-
-## ScreenShot
-
-<img src="./assets/ss.jpeg" alt="Weather App Screenshot" width="400">
 
 ## Feedback and Contributions
 
