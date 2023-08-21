@@ -35,7 +35,7 @@ const HorizontalScrollViewExample = () => {
       })
       .catch((error) => {
         console.error("API error:", error);
-        setFutureData(null); // Set data to null on error
+        setFutureData(null);
       });
   }, [location]);
 
@@ -53,11 +53,6 @@ const HorizontalScrollViewExample = () => {
     const dayIndex = date.getDay();
     return daysOfWeek[dayIndex];
   };
-
-  const weatherData = JSON.stringify(futureData);
-  // for (i in futureData) {
-  //   console.log(futureData[i].date);
-  // }
 
   useEffect(() => {
     fetch(
