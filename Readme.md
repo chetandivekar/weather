@@ -20,6 +20,10 @@ Welcome to the Weather App! This app provides you with the latest weather condit
 - Built using React Native.
 - Utilizes weather data from a reliable source.
 
+## ScreenShot
+
+![Weather App Screenshot](./assets/ss.jpeg)
+
 ## Feedback and Contributions
 
 We welcome your feedback! If you encounter any issues or have suggestions for improvements, please let us know. If you're a developer, feel free to contribute to the project by opening a pull request.

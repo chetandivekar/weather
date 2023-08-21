@@ -251,7 +251,7 @@ const HorizontalScrollViewExample = () => {
               </View>
 
               <View>
-                <Text style={styles.forecast}>Daily Forecasts</Text>
+                <Text style={styles.forecast}>Weekly Forecasts</Text>
               </View>
             </View>
             <View style={{ marginTop: 30, marginLeft: 10 }}>
