@@ -25,6 +25,7 @@ const HorizontalScrollViewExample = () => {
   const [displayText, setDisplayText] = useState("");
   const [location, setLocation] = useState("Mumbai");
   const [futureData, setFutureData] = useState(null);
+  const [test, settest] = useState(null);
   useEffect(() => {
     fetch(
       `http://api.weatherapi.com/v1/forecast.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&days=7&aqi=no&alerts=no`
@@ -34,7 +35,21 @@ const HorizontalScrollViewExample = () => {
         setFutureData(data.forecast.forecastday);
       })
       .catch((error) => {
-        console.error("API error:", error);
+        alert("Select the proper city-location", error);
+        setFutureData(null);
+      });
+  }, [location]);
+  useEffect(() => {
+    fetch(
+      `http://api.weatherapi.com/v1/forecast.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&days=7&aqi=no&alerts=no`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        settest(data && data.forecast.forecastday[0].hour);
+      })
+
+      .catch((error) => {
+        alert("Select the proper city-location", error);
         setFutureData(null);
       });
   }, [location]);
@@ -63,7 +78,7 @@ const HorizontalScrollViewExample = () => {
         setData(data);
       })
       .catch((error) => {
-        console.error("API error:", error);
+        alert("Select the proper city-location", error);
         setData(null); // Set data to null on error
       });
   }, [location]);
@@ -246,20 +261,69 @@ const HorizontalScrollViewExample = () => {
               </View>
 
               <View>
+                <Text style={styles.forecast}>Daily Forecasts</Text>
+              </View>
+            </View>
+            <View
+              style={{
+                marginTop: 30,
+                marginLeft: 10,
+                height: 180,
+              }}
+            >
+              <ScrollView horizontal>
+                <View style={styles.container}>
+                  {test &&
+                    test.map((day, i) => (
+                      <View key={i} style={styles.box}>
+                        <Image
+                          style={{ width: 70, height: 70 }}
+                          source={{
+                            uri:
+                              data &&
+                              data.current &&
+                              "https:" + day.condition.icon,
+                          }}
+                        />
+                        <Text style={styles.day}>{day.time.split(" ")[1]}</Text>
+                        <Text style={styles.temp_c}>{day.temp_c}°</Text>
+                      </View>
+                    ))}
+                </View>
+              </ScrollView>
+            </View>
+
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <View>
+                <Image
+                  source={require("./assets/date.png")}
+                  style={{
+                    width: 23,
+                    height: 23,
+                    marginLeft: 20,
+                  }}
+                />
+              </View>
+
+              <View>
                 <Text style={styles.forecast}>Weekly Forecasts</Text>
               </View>
             </View>
-            <View style={{ marginTop: 30, marginLeft: 10 }}>
+
+            <View
+              style={{
+                marginTop: 30,
+                marginLeft: 10,
+                height: 180,
+              }}
+            >
               <ScrollView horizontal>
-                {/* <View style={styles.box}>
-                  <Text style={styles.color}>Item 1</Text>
-                </View>
-                <View style={styles.box}>
-                  <Text style={styles.color}>Item 2</Text>
-                </View>
-                <View style={styles.box}>
-                  <Text style={styles.color}>Item 3</Text>
-                </View> */}
                 <View style={styles.container}>
                   {futureData &&
                     futureData.map((day) => (
@@ -280,7 +344,6 @@ const HorizontalScrollViewExample = () => {
                 </View>
               </ScrollView>
             </View>
-            <View></View>
           </View>
         ) : (
           <View>
@@ -318,7 +381,7 @@ const styles = StyleSheet.create({
   flex: {
     display: "flex",
     flexDirection: "row",
-    marginTop: 150,
+    marginTop: 90,
   },
   mainheading: {
     color: "#FFF",
@@ -340,7 +403,6 @@ const styles = StyleSheet.create({
     resizeMode: "cover", // or 'stretch' for different scaling behavior
   },
   main: {
-    marginTop: 200,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
