@@ -22,7 +22,7 @@ Welcome to the Weather App! This app provides you with the latest weather condit
 
 ## ScreenShot
 
-![Weather App Screenshot](./assets/ss.jpeg)
+<img src="./assets/ss.jpeg" alt="Weather App Screenshot" width="400">
 
 ## Feedback and Contributions
 
