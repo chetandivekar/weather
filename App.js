@@ -8,7 +8,7 @@ import {
   ImageBackground,
   Image,
   TextInput,
-  Button,
+  Linking,
   TouchableOpacity,
 } from "react-native";
 import {
@@ -20,6 +20,10 @@ import {
 } from "@expo-google-fonts/roboto";
 
 const HorizontalScrollViewExample = () => {
+  const openLink = () => {
+    const url = "https://div-chetan.netlify.app"; // Replace with your desired URL
+    Linking.openURL(url);
+  };
   const [data, setData] = useState(null);
   const [textInputValue, setTextInputValue] = useState("");
   const [displayText, setDisplayText] = useState("");
@@ -35,7 +39,7 @@ const HorizontalScrollViewExample = () => {
         setFutureData(data.forecast.forecastday);
       })
       .catch((error) => {
-        alert("Select the proper city-location", error);
+        alert("Enter the proper city-location", error);
         setFutureData(null);
       });
   }, [location]);
@@ -159,7 +163,9 @@ const HorizontalScrollViewExample = () => {
           <View style={styles.main}>
             <View style={styles.flex}>
               <View>
-                <Text style={[styles.mainheading, styles.light]}>
+                <Text
+                  style={[styles.mainheading, styles.light, styles.flexAlign]}
+                >
                   {data && data.location && data.location.name},{" "}
                 </Text>
               </View>
@@ -350,7 +356,20 @@ const HorizontalScrollViewExample = () => {
             <Text>Not found</Text>
           </View>
         )}
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={styles.lowerText}>created by </Text>
+          <TouchableOpacity onPress={openLink}>
+            <Text style={[styles.lowerText, styles.underline]}>div.chetan</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+
       <StatusBar />
     </ImageBackground>
   );
@@ -382,6 +401,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     marginTop: 90,
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  flexAlign: {
+    flexDirection: "column",
   },
   mainheading: {
     color: "#FFF",
@@ -406,6 +430,13 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  lowerText: {
+    textAlign: "center",
+    fontFamily: "Roboto_500Medium",
+    fontSize: 17,
+    color: "#FFF",
+    marginBottom: 20,
   },
   forecast: {
     color: "#FFF",
@@ -438,6 +469,9 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 6,
     marginLeft: 10,
+  },
+  underline: {
+    textDecorationLine: "underline",
   },
 });
 
