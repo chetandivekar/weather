@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_KEY } from "@env";
 import {
   ScrollView,
   View,
@@ -20,6 +21,7 @@ import {
 } from "@expo-google-fonts/roboto";
 
 const HorizontalScrollViewExample = () => {
+  console.log(API_KEY);
   const openLink = () => {
     const url = "https://div-chetan.netlify.app"; // Replace with your desired URL
     Linking.openURL(url);
@@ -350,24 +352,28 @@ const HorizontalScrollViewExample = () => {
                 </View>
               </ScrollView>
             </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={styles.lowerText}>created by </Text>
+              <TouchableOpacity onPress={openLink}>
+                <Text style={[styles.lowerText, styles.underline]}>
+                  div.chetan
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
           <View>
-            <Text>Not found</Text>
+            <Text style={{ textAlign: "center", color: "#FFF", marginTop: 40 }}>
+              Not found
+            </Text>
           </View>
         )}
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={styles.lowerText}>created by </Text>
-          <TouchableOpacity onPress={openLink}>
-            <Text style={[styles.lowerText, styles.underline]}>div.chetan</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
 
       <StatusBar />
