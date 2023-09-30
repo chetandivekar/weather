@@ -21,9 +21,8 @@ import {
 } from "@expo-google-fonts/roboto";
 
 const HorizontalScrollViewExample = () => {
-  console.log(API_KEY);
   const openLink = () => {
-    const url = "https://div-chetan.netlify.app"; // Replace with your desired URL
+    const url = "https://div-chetan.netlify.app";
     Linking.openURL(url);
   };
   const [data, setData] = useState(null);
@@ -34,7 +33,7 @@ const HorizontalScrollViewExample = () => {
   const [test, settest] = useState(null);
   useEffect(() => {
     fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&days=7&aqi=no&alerts=no`
+      `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=7&aqi=no&alerts=no`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -47,7 +46,7 @@ const HorizontalScrollViewExample = () => {
   }, [location]);
   useEffect(() => {
     fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&days=7&aqi=no&alerts=no`
+      `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=7&aqi=no&alerts=no`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -77,7 +76,7 @@ const HorizontalScrollViewExample = () => {
 
   useEffect(() => {
     fetch(
-      `http://api.weatherapi.com/v1/current.json?key=4fbacb367b2b4a8ca9f74202231708&q=${location}&aqi=no`
+      `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&aqi=no`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -97,7 +96,7 @@ const HorizontalScrollViewExample = () => {
   });
 
   if (!fontsLoaded) {
-    return null; // You might want to show a loading indicator here
+    return null;
   }
   const handleInputChange = (text) => {
     setTextInputValue(text);
