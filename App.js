@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { API_KEY } from "@env";
 import {
   ScrollView,
   View,
@@ -31,19 +30,24 @@ const HorizontalScrollViewExample = () => {
   const [location, setLocation] = useState("Mumbai");
   const [futureData, setFutureData] = useState(null);
   const [test, settest] = useState(null);
+  const API_KEY = "0f8b53a448e44ae3bd8143503230310";
+
+  //Actual Data
   useEffect(() => {
     fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=7&aqi=no&alerts=no`
+      `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&aqi=no`
     )
       .then((response) => response.json())
       .then((data) => {
-        setFutureData(data.forecast.forecastday);
+        setData(data);
       })
       .catch((error) => {
-        alert("Enter the proper city-location", error);
-        setFutureData(null);
+        alert("key is wrong", error);
+        setData(null); // Set data to null on error
       });
   }, [location]);
+
+  // Daily Data
   useEffect(() => {
     fetch(
       `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=7&aqi=no&alerts=no`
@@ -55,6 +59,21 @@ const HorizontalScrollViewExample = () => {
 
       .catch((error) => {
         alert("Select the proper city-location", error);
+        setFutureData(null);
+      });
+  }, [location]);
+
+  // FutureData
+  useEffect(() => {
+    fetch(
+      `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=7&aqi=no&alerts=no`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setFutureData(data.forecast.forecastday);
+      })
+      .catch((error) => {
+        alert("Enter the proper city-location", error);
         setFutureData(null);
       });
   }, [location]);
@@ -74,20 +93,6 @@ const HorizontalScrollViewExample = () => {
     return daysOfWeek[dayIndex];
   };
 
-  useEffect(() => {
-    fetch(
-      `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&aqi=no`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
-        alert("Select the proper city-location", error);
-        setData(null); // Set data to null on error
-      });
-  }, [location]);
-
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_300Light,
@@ -106,6 +111,8 @@ const HorizontalScrollViewExample = () => {
     setDisplayText(textInputValue);
     setLocation(textInputValue);
   };
+
+  console.log(data);
 
   return (
     <ImageBackground
@@ -160,7 +167,7 @@ const HorizontalScrollViewExample = () => {
             </TouchableOpacity>
           </View>
         </View>
-        {data ? (
+        {data && !data.error ? (
           <View style={styles.main}>
             <View style={styles.flex}>
               <View>
@@ -351,20 +358,6 @@ const HorizontalScrollViewExample = () => {
                 </View>
               </ScrollView>
             </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={styles.lowerText}>created by </Text>
-              <TouchableOpacity onPress={openLink}>
-                <Text style={[styles.lowerText, styles.underline]}>
-                  div.chetan
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
         ) : (
           <View>
@@ -373,6 +366,18 @@ const HorizontalScrollViewExample = () => {
             </Text>
           </View>
         )}
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={styles.lowerText}>created by </Text>
+          <TouchableOpacity onPress={openLink}>
+            <Text style={[styles.lowerText, styles.underline]}>div.chetan</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
 
       <StatusBar />
