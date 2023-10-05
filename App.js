@@ -30,7 +30,6 @@ const HorizontalScrollViewExample = () => {
   const [location, setLocation] = useState("Mumbai");
   const [futureData, setFutureData] = useState(null);
   const [test, settest] = useState(null);
-  const [product, setProduct] = useState([]);
 
   //Actual Data
   // useEffect(() => {
@@ -145,13 +144,6 @@ const HorizontalScrollViewExample = () => {
     fetchData();
   }, [location]);
 
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
-      .then((json) => setProduct(json))
-      .catch((error) => console.error("Error fetching products:", error));
-  }, []);
-
   const getDayOfWeek = (dateString) => {
     const daysOfWeek = [
       "Sunday",
@@ -192,6 +184,7 @@ const HorizontalScrollViewExample = () => {
       style={styles.backgroundImage}
       blurRadius={50}
     >
+      <StatusBar />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -237,30 +230,6 @@ const HorizontalScrollViewExample = () => {
                 style={{ height: 22, width: 22 }}
               />
             </TouchableOpacity>
-          </View>
-
-          <View>
-            {data ? (
-              <Text>{JSON.stringify(data)}</Text>
-            ) : (
-              <Text>Data is not Stringyfy</Text>
-            )}
-          </View>
-
-          <View>
-            {product ? (
-              product &&
-              product.map((item, index) => (
-                <View key={index}>
-                  {/* Render the product data here */}
-                  <Text>{item.title}</Text>
-                  <Text>{item.price}</Text>
-                  {/* Add more product details as needed */}
-                </View>
-              ))
-            ) : (
-              <Text>Just API is not working</Text>
-            )}
           </View>
         </View>
         {data && data.error && data.error.code == 2008 ? (
@@ -497,8 +466,6 @@ const HorizontalScrollViewExample = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      <StatusBar />
     </ImageBackground>
   );
 };
