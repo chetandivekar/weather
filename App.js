@@ -42,7 +42,7 @@ const HorizontalScrollViewExample = () => {
         setData(data);
       })
       .catch((error) => {
-        alert("key is wrong", error);
+        alert("Failed to fetch", error);
         setData(null); // Set data to null on error
       });
   }, [location]);
@@ -167,7 +167,21 @@ const HorizontalScrollViewExample = () => {
             </TouchableOpacity>
           </View>
         </View>
-        {data && !data.error ? (
+        {data && data.error && data.error.code == 2008 ? (
+          <View>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#FFF",
+                marginTop: 40,
+                marginBottom: 250,
+                fontFamily: "Roboto_500Medium",
+              }}
+            >
+              API is Not Valid
+            </Text>
+          </View>
+        ) : data && !data.error ? (
           <View style={styles.main}>
             <View style={styles.flex}>
               <View>
@@ -361,8 +375,16 @@ const HorizontalScrollViewExample = () => {
           </View>
         ) : (
           <View>
-            <Text style={{ textAlign: "center", color: "#FFF", marginTop: 40 }}>
-              Not found
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#FFF",
+                marginTop: 40,
+                marginBottom: 250,
+                fontFamily: "Roboto_500Medium",
+              }}
+            >
+              No Location Found
             </Text>
           </View>
         )}
