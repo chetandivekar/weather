@@ -31,61 +31,126 @@ const HorizontalScrollViewExample = () => {
   const [futureData, setFutureData] = useState(null);
   const [test, settest] = useState(null);
   const [product, setProduct] = useState([]);
-  const API_KEY = "0f8b53a448e44ae3bd8143503230310";
 
   //Actual Data
+  // useEffect(() => {
+  //   fetch(
+  //     `https://api.weatherapi.com/v1/current.json?key=0f8b53a448e44ae3bd8143503230310&q=${location}&aqi=no`
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setData(data);
+  //     })
+  //     .catch((error) => {
+  //       alert("Failed to fetch", error);
+  //       setData(null); // Set data to null on error
+  //     });
+  // }, [location]);
+
+  // // Daily Data
+  // useEffect(() => {
+  //   fetch(
+  //     `https://api.weatherapi.com/v1/forecast.json?key=0f8b53a448e44ae3bd8143503230310&q=${location}&days=7&aqi=no&alerts=no`
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       settest(data && data.forecast.forecastday[0].hour);
+  //     })
+
+  //     .catch((error) => {
+  //       alert("Select the proper city-location", error);
+  //       setFutureData(null);
+  //     });
+  // }, [location]);
+
+  // // FutureData
+  // useEffect(() => {
+  //   fetch(
+  //     `https://api.weatherapi.com/v1/forecast.json?key=0f8b53a448e44ae3bd8143503230310&q=${location}&days=7&aqi=no&alerts=no`
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setFutureData(data.forecast.forecastday);
+  //     })
+  //     .catch((error) => {
+  //       alert("Enter the proper city-location", error);
+  //       setFutureData(null);
+  //     });
+  // }, [location]);
+
+  // useEffect(() => {
+  //   fetch("https://fakestoreapi.com/products")
+  //     .then((res) => res.json())
+  //     .then((json) => setProduct(json));
+  // }, []);
+
   useEffect(() => {
-    fetch(
-      `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&aqi=no`
-    )
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.weatherapi.com/v1/current.json?key=0f8b53a448e44ae3bd8143503230310&q=${location}&aqi=no`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
         setData(data);
-      })
-      .catch((error) => {
-        alert("Failed to fetch", error);
+      } catch (error) {
+        alert("Failed to fetch", error.message);
         setData(null); // Set data to null on error
-      });
+      }
+    };
+
+    fetchData();
   }, [location]);
 
-  // Daily Data
+  console.log(data);
   useEffect(() => {
-    fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=7&aqi=no&alerts=no`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        settest(data && data.forecast.forecastday[0].hour);
-      })
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.weatherapi.com/v1/forecast.json?key=0f8b53a448e44ae3bd8143503230310&q=${location}&days=7&aqi=no&alerts=no`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        settest(data?.forecast?.forecastday[0]?.hour);
+      } catch (error) {
+        alert("Select the proper city-location", error.message);
+        settest(null);
+      }
+    };
 
-      .catch((error) => {
-        alert("Select the proper city-location", error);
-        setFutureData(null);
-      });
+    fetchData();
   }, [location]);
 
-  // FutureData
   useEffect(() => {
-    fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=7&aqi=no&alerts=no`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setFutureData(data.forecast.forecastday);
-      })
-      .catch((error) => {
-        alert("Enter the proper city-location", error);
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.weatherapi.com/v1/forecast.json?key=0f8b53a448e44ae3bd8143503230310&q=${location}&days=7&aqi=no&alerts=no`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setFutureData(data?.forecast?.forecastday);
+      } catch (error) {
+        alert("Enter the proper city-location", error.message);
         setFutureData(null);
-      });
+      }
+    };
+
+    fetchData();
   }, [location]);
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
-      .then((json) => setProduct(json));
+      .then((json) => setProduct(json))
+      .catch((error) => console.error("Error fetching products:", error));
   }, []);
-
-  console.log(product);
 
   const getDayOfWeek = (dateString) => {
     const daysOfWeek = [
@@ -120,8 +185,6 @@ const HorizontalScrollViewExample = () => {
     setDisplayText(textInputValue);
     setLocation(textInputValue);
   };
-
-  console.log(data);
 
   return (
     <ImageBackground
