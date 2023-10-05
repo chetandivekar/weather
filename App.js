@@ -30,6 +30,7 @@ const HorizontalScrollViewExample = () => {
   const [location, setLocation] = useState("Mumbai");
   const [futureData, setFutureData] = useState(null);
   const [test, settest] = useState(null);
+  const [product, setProduct] = useState([]);
   const API_KEY = "0f8b53a448e44ae3bd8143503230310";
 
   //Actual Data
@@ -77,6 +78,14 @@ const HorizontalScrollViewExample = () => {
         setFutureData(null);
       });
   }, [location]);
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((json) => setProduct(json));
+  }, []);
+
+  console.log(product);
 
   const getDayOfWeek = (dateString) => {
     const daysOfWeek = [
@@ -165,6 +174,30 @@ const HorizontalScrollViewExample = () => {
                 style={{ height: 22, width: 22 }}
               />
             </TouchableOpacity>
+          </View>
+
+          <View>
+            {data ? (
+              <Text>{JSON.stringify(data)}</Text>
+            ) : (
+              <Text>Data is not Stringyfy</Text>
+            )}
+          </View>
+
+          <View>
+            {product ? (
+              product &&
+              product.map((item, index) => (
+                <View key={index}>
+                  {/* Render the product data here */}
+                  <Text>{item.title}</Text>
+                  <Text>{item.price}</Text>
+                  {/* Add more product details as needed */}
+                </View>
+              ))
+            ) : (
+              <Text>Just API is not working</Text>
+            )}
           </View>
         </View>
         {data && data.error && data.error.code == 2008 ? (
