@@ -30,6 +30,7 @@ const HorizontalScrollViewExample = () => {
   const [location, setLocation] = useState("Mumbai");
   const [futureData, setFutureData] = useState(null);
   const [test, settest] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   //Actual Data
   // useEffect(() => {
@@ -94,6 +95,7 @@ const HorizontalScrollViewExample = () => {
         }
         const data = await response.json();
         setData(data);
+        setIsLoading(false);
       } catch (error) {
         alert("Failed to fetch", error.message);
         setData(null); // Set data to null on error
@@ -103,7 +105,6 @@ const HorizontalScrollViewExample = () => {
     fetchData();
   }, [location]);
 
-  console.log(data);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -115,6 +116,7 @@ const HorizontalScrollViewExample = () => {
         }
         const data = await response.json();
         settest(data?.forecast?.forecastday[0]?.hour);
+        setIsLoading(false);
       } catch (error) {
         alert("Select the proper city-location", error.message);
         settest(null);
@@ -135,6 +137,7 @@ const HorizontalScrollViewExample = () => {
         }
         const data = await response.json();
         setFutureData(data?.forecast?.forecastday);
+        setIsLoading(false);
       } catch (error) {
         alert("Enter the proper city-location", error.message);
         setFutureData(null);
@@ -184,7 +187,11 @@ const HorizontalScrollViewExample = () => {
       style={styles.backgroundImage}
       blurRadius={50}
     >
-      <StatusBar />
+      <StatusBar
+        backgroundColor="#385861"
+        barStyle="light-content"
+        hidden={false}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -211,6 +218,7 @@ const HorizontalScrollViewExample = () => {
                 borderColor: "rgba(255, 255, 255, 0.3)",
                 borderRadius: 10,
                 width: 250,
+                height: 40,
                 color: "#FFF",
                 fontFamily: "Roboto_400Regular",
                 backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -449,7 +457,7 @@ const HorizontalScrollViewExample = () => {
                 fontFamily: "Roboto_500Medium",
               }}
             >
-              No Location Found
+              Loading.... Fetching Weather Data
             </Text>
           </View>
         )}
@@ -562,7 +570,7 @@ const styles = StyleSheet.create({
   customButton: {
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     borderRadius: 50,
-    padding: 6,
+    padding: 8,
     marginLeft: 10,
   },
   underline: {
